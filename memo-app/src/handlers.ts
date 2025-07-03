@@ -1,4 +1,7 @@
 import { elements } from './main';
+import { deleteMemo, insertMemo } from './service/service';
+import { gsap } from 'gsap';
+import type { Tables } from './supabase/database.types';
 
 let draggingEl: HTMLElement | null = null;
 
@@ -54,4 +57,44 @@ export const handleDragEnd = (): void => {
     draggingEl.classList.remove('dragging');
     draggingEl = null;
   }
+};
+
+export const handleDelete = async (e: MouseEvent) => {
+  const target = e.target as Element;
+  const btn = target.closest('button');
+  const memo = target.closest('article');
+
+  if (!(btn && memo)) return;
+
+  const id = memo.dataset.id;
+
+  if (confirm('정말 지울거야?')) {
+    deleteMemo(Number(id));
+  }
+};
+
+export const handleOpenPop = () => {
+  const tl = gsap.timeline().to('#dialog', { autoAlpha: 1, duration: 0.2 }).to('.pop', { y: 0, ease: 'power3.inOut' });
+};
+export const handleCreate = (e: MouseEvent) => {
+  e.preventDefault();
+  const title = document.querySelector('#title') as HTMLInputElement;
+  const description = document.querySelector('#description') as HTMLInputElement;
+  const priority = document.querySelector('#priority') as HTMLSelectElement;
+
+  insertMemo({
+    title: title.value,
+    description: description.value,
+    priority: priority.value as Tables<'memo'>['priority'],
+  });
+
+  title.value = '';
+  description.value = '';
+  priority.value = '';
+};
+export const handleClosePop = () => {
+  const tl = gsap
+    .timeline()
+    .to('.pop', { y: '100%', ease: 'power3.inOut' })
+    .to('#dialog', { autoAlpha: 0, duration: 0.2 });
 };

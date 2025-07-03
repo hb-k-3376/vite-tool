@@ -10,7 +10,7 @@ export type MemoData = {
 
 export const createMemo = (memo: Omit<Tables<'memo'>, 'created_at'>): string => {
   return `        
-        <article class="memo ${memo.priority}" draggable='true'>
+        <article class="memo ${memo.priority}" data-id="${memo.id}" draggable='true'>
           <header class="memo-header">
             <span class="badge">${memo.priority}</span>
             <button type="button" class='delete'>
