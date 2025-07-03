@@ -1,3 +1,5 @@
+import type { Tables } from './supabase/database.types';
+
 export type MemoData = {
   id: number;
   priority: 'high' | 'medium' | 'easy';
@@ -6,7 +8,7 @@ export type MemoData = {
   hits: number;
 };
 
-export const createMemo = (memo: MemoData): string => {
+export const createMemo = (memo: Omit<Tables<'memo'>, 'created_at'>): string => {
   return `        
         <article class="memo ${memo.priority}" draggable='true'>
           <header class="memo-header">
@@ -28,7 +30,7 @@ export const createMemo = (memo: MemoData): string => {
 };
 
 // renderMemo
-export const renderMemo = (target: HTMLElement | null, memo: MemoData): void => {
+export const renderMemo = (target: HTMLElement | null, memo: Omit<Tables<'memo'>, 'created_at'>): void => {
   // insertAdjacentHTML <- string을 렌더링 해준다.
   target?.insertAdjacentHTML('beforeend', createMemo(memo));
 };

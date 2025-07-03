@@ -1,12 +1,14 @@
 import { renderMemo } from '../card';
-import { data } from '../data';
 import { elements } from '../main';
-import { supabase } from '../supabase/suapbase';
+import { supabase } from '../supabase/supabase';
 
-export const fetchMemo = (): void => {
-  data.forEach((memo) => {
-    renderMemo(elements.main, memo);
-  });
+export const fetchMemo = async () => {
+  const { data, error } = await supabase.from('memo').select();
+
+  if (error) return;
+
+  data &&
+    data.forEach((memo) => {
+      renderMemo(elements.main, memo);
+    });
 };
-
-console.log(supabase);
