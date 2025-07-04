@@ -1,5 +1,5 @@
 import { elements } from './main';
-import { deleteMemo, insertMemo } from './service/service';
+import { deleteMemo, insertMemo, sortMemo } from './service/service';
 import { gsap } from 'gsap';
 import type { Tables } from './supabase/database.types';
 
@@ -39,6 +39,7 @@ const getDragAfterElement = (container: HTMLElement, y: number) => {
 
 export const handleDragOver = (e: DragEvent): void => {
   e.preventDefault();
+
   const afterEl = getDragAfterElement(elements.main, e.clientY);
 
   // draggingEl이 없는 경우 return
@@ -57,6 +58,7 @@ export const handleDragEnd = (): void => {
     draggingEl.classList.remove('dragging');
     draggingEl = null;
   }
+  sortMemo();
 };
 
 export const handleDelete = async (e: MouseEvent) => {
@@ -86,6 +88,7 @@ export const handleCreate = (e: MouseEvent) => {
     title: title.value,
     description: description.value,
     priority: priority.value as Tables<'memo'>['priority'],
+    position: document.querySelectorAll('article').length,
   });
 
   title.value = '';
